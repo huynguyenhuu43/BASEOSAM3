@@ -1,0 +1,25 @@
+CC=arm-none-eabi-gcc
+AS=arm-none-eabi-as
+LD=arm-none-eabi-ld
+OBJCOPY=arm-none-eabi-objcopy
+
+CFLAGS=-mcpu=cortex-a72 -fpic -ffreestanding
+ASFLAGS=-mcpu=cortex-a72
+LDFLAGS=-T linker.ld
+
+all: kernel8.img
+
+boot.o: boot.S
+    $(AS) $(ASFLAGS) $< -o $@
+
+kernel.o: kernel.c
+    $(CC) $(CFLAGS) -c $< -o $@
+
+kernel.elf: boot.o kernel.o
+    $(LD) $(LDFLAGS) $^ -o $@
+
+kernel8.img: kernel.elf
+    $(OBJCOPY) -O binary $< $@
+
+clean:
+    rm -f *.o *.elf *.img
