@@ -2,6 +2,17 @@
 
 #define SCR_WIDTH 1024
 #define SCR_HEIGHT 768
+// Define your colors struct
+struct Colors
+{
+    unsigned int RED, GREEN, BLUE, YELLOW, CYAN, PINK, BLACK, WHITE;
+};
+
+// Declare the colorsInit function
+void colorsInit(struct Colors *colors);
+
+// Declare the clearScreen function
+void clearScreen(unsigned int color);
 
 void physical_framebf_init(int w, int h);
 void virtual_framebf_init(int w, int h);

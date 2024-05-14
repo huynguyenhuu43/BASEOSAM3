@@ -13,6 +13,27 @@
 
 //Pixel Order: BGR in memory order (little endian --> RGB in byte order)
 #define PIXEL_ORDER 0
+#include "framebf.h"
+
+// Define colorsInit function
+void colorsInit(struct Colors *colors)
+{
+    colors->RED = 0x00AA0000;
+    colors->GREEN = 0x0000BB00;
+    colors->BLUE = 0x000000CC;
+    colors->YELLOW = 0x00FFFF00;
+    colors->CYAN = 0x00A2DDFA;
+    colors->PINK = 0x00FA4380;
+    colors->BLACK = 0;
+    colors->WHITE = 0x00FFFFFF;
+}
+
+// Define clearScreen function
+void clearScreen(unsigned int color)
+{
+    // Implementation of clearing the screen with the specified color
+    // For example, if you're working with a frame buffer, you might fill it with the specified color.
+}
 
 //Screen info
 unsigned int width, height, pitch;

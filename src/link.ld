@@ -1,4 +1,7 @@
-/* -----------------------------------link.ld -------------------------------------*/
+MEMORY
+{
+    RAM : ORIGIN = 0x8000, LENGTH = 256K
+}
 
 SECTIONS
 {
@@ -16,6 +19,21 @@ SECTIONS
     }
     _end = .;
 
-   /DISCARD/ : { *(.comment) *(.gnu*) *(.note*) *(.eh_frame*) }
+    /DISCARD/ : { *(.comment) *(.gnu*) *(.note*) *(.eh_frame*) }
+
+    .text : {
+       *(.text)    /* All text code */
+       . = ALIGN(4);
+    }
+
+    .data : {
+       *(.data)    /* All initialized data */
+       . = ALIGN(4);
+    }
+
+    .bss : {
+       *(.bss)     /* All uninitialized variables */
+       . = ALIGN(4);
+    }
 }
 __bss_size = (__bss_end - __bss_start)>>3;

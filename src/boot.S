@@ -1,5 +1,3 @@
-// -----------------------------------boot.S -------------------------------------
-
 .section ".text.boot"  // Make sure the linker puts this at the start of the kernel image
 
 .global _start  // Execution starts here
@@ -26,7 +24,23 @@ _start:
     sub     w2, w2, #1
     cbnz    w2, 3b               // Loop if non-zero
 
-    // Jump to our main() routine in C (make sure it doesn't return)
-4:  bl      main
-    // In case it does return, halt the master core too
-	b       1b
+    // Call init_system if it's core 0, otherwise wait
+    mrs     x0, mpidr_el1            // Read MPIDR to obtain information about the current core
+    and     x0, x0, #3               // Only take the lowest 2 bits to determine the core ID
+    cbz     x0, core0_start          // If it is core 0, jump to core0_start
+1:  wfe                               // Wait for event
+    b       1b                       // Continue waiting in the loop
+
+core0_start:
+    bl      init_system               // Call the system initialization function
+    b       main                      // Jump to the main function in C
+
+// System initialization function
+init_system:
+    // Setup stacks and necessary configurations
+    ret                               // Return after initialization
+
+.global main
+main:
+    ldr     x0, =main                // Address of the main function in C
+    br      x0                        // Jump to the main function

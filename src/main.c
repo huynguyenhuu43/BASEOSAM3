@@ -1,62 +1,71 @@
+// In the first snippet
 #include "uart.h"
 #include "core.h"
 #include "mbox.h"
 #include "framebf.h"
+#include <stdio.h>  // Write functions to output data to hardware
 
-uart_config config = {
-    .data_bits = 8,
-    .stop_bits = 1,
-    .cts_rts = 0,
-    .parity = 0,
-    .baudrate = 115200
-};
-
-
-struct Colors
-{
-    unsigned int RED, GREEN, BLUE, YELLOW, CYAN, PINK, BLACK, WHITE;
-} COLORS;
-
-void colorsInit()
-{
-    COLORS.RED = 0x00AA0000;
-    COLORS.GREEN = 0x0000BB00;
-    COLORS.BLUE = 0x000000CC;
-    COLORS.YELLOW = 0x00FFFF00;
-    COLORS.CYAN = 0x00A2DDFA;
-    COLORS.PINK = 0x00FA4380;
-    COLORS.BLACK = 0;
-    COLORS.WHITE = 0x00FFFFFF;
+// Define core tasks
+void core1_task(void) {
+    while (1) {
+        printf("Core 1: Analyzing sensor data.\n");
+        // Simulate the analysis process
+        for (volatile int i = 0; i < 1000000; i++);
+    }
 }
 
-void main()
-{
+void core2_task(void) {
+    while (1) {
+        // Simulate performing a task, e.g., image processing
+        printf("Core 2: Processing images.\n");
+        // Simulate the image processing process
+        for (volatile int i = 0; i < 1000000; i++);
+    }
+}
+
+void core3_task(void) {
+    while (1) {
+        // Simulate performing a task, e.g., data storage
+        printf("Core 3: Storing data.\n");
+        // Simulate the data storage process
+        for (volatile int i = 0; i < 1000000; i++);
+    }
+}
+
+// Main function
+int main() {
     uart_configure(&config);
     colorsInit();
     framebf_init(SCR_WIDTH, SCR_HEIGHT);
     displayMenu();
     drawOnScreen();
 
-    while (1)
-    {
+    // Start other cores
+    start_core(1, core1_task);
+    start_core(2, core2_task);
+    start_core(3, core3_task);
 
+    while (1) {
         uart_puts("\n\n");
         char c = uart_getc();
         uart_sendc(c);
         uart_sendc('\n');
 
-        switch (c)
-        {
+        switch (c) {
             case '1':
+                // Handle command 1
                 break;
             case '2':
+                // Handle command 2
                 break;
             case '3':
+                // Handle command 3
                 break;
             case '4':
                 playVideo();
                 break;
             case '5':
+                // Handle command 5
                 break;
             case '0':
                 clearScreen(COLORS.BLACK);
@@ -67,4 +76,6 @@ void main()
                 break;
         }
     }
+
+    return 0;
 }
